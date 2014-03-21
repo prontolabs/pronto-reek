@@ -8,6 +8,7 @@ module Pronto
 
       patches_with_additions = patches.select { |patch| patch.additions > 0 }
       files = patches_with_additions.map { |patch| patch.new_file_full_path.to_s }
+      files = files.grep /\.rb$/
 
       if files.any?
         examiner = ::Reek::Examiner.new(files)
