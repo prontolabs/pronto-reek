@@ -21,14 +21,13 @@ module Pronto
     def messages_for(patches, errors)
       errors.map do |error|
         patch = patch_for_error(patches, error)
+        next if patch.nil?
 
-        if patch
-          line = patch.added_lines.find do |added_line|
-            error.lines.find { |error_line| error_line == added_line.new_lineno }
-          end
-
-          new_message(line, error) if line
+        line = patch.added_lines.find do |added_line|
+          error.lines.find { |error_line| error_line == added_line.new_lineno }
         end
+
+        new_message(line, error) if line
       end
     end
 
