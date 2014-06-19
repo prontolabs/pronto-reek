@@ -18,35 +18,30 @@ module Pronto
         it { should == [] }
       end
 
+      let(:examiner) { double('examiner', smells: []) }
+      before { ::Reek::Examiner.stub(:new).and_return(examiner) }
+
       context 'patches with additions' do
-        let(:patches) { [
-          double("patch with additions", additions: 4, new_file_full_path: 'ruby_code.rb'),
-          double("patch without additions", additions: 0) ] }
-
-        let(:examiner) { double("examiner", smells: []) }
-
-        before do
-          ::Reek::Examiner.stub(:new).and_return examiner
+        let(:patches) do
+          [double('with', additions: 4, new_file_full_path: 'ruby_code.rb'),
+           double('without', additions: 0)]
         end
 
-        it "calls reek with the files that have additions" do
+        it 'calls reek with the files that have additions' do
           subject
           ::Reek::Examiner.should have_received(:new).with ['ruby_code.rb']
         end
       end
 
       context 'patches with additions to non-ruby files' do
-        let(:patches) { [
-          double("patch for ruby file", additions: 4, new_file_full_path: 'ruby_code.rb'),
-          double("patch for non-ruby file", additions: 4, new_file_full_path: 'other.stuff') ] }
-
-        let(:examiner) { double("examiner", smells: []) }
-
-        before do
-          ::Reek::Examiner.stub(:new).and_return examiner
+        let(:patches) do
+          [double('ruby', additions: 4, new_file_full_path: 'ruby_code.rb'),
+           double('non-ruby', additions: 4, new_file_full_path: 'other.stuff')]
         end
 
-        it "calls reek with only the ruby files" do
+        before { ::Pronto::Reek.any_instance.stub(:ruby_executable?).and_return(false) }
+
+        it 'calls reek with only the ruby files' do
           subject
           ::Reek::Examiner.should have_received(:new).with ['ruby_code.rb']
         end
