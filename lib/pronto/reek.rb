@@ -33,12 +33,12 @@ module Pronto
 
     def new_message(line, error)
       Message.new(line.patch.delta.new_file[:path], line, :warning,
-                  "#{error.message.capitalize} (#{error.subclass})")
+                  "#{error.message.capitalize} (#{error.smell_type})")
     end
 
     def patch_for_error(patches, error)
       patches.find do |patch|
-        patch.new_file_full_path.to_s == error.location['source']
+        patch.new_file_full_path.to_s == error.source
       end
     end
   end
