@@ -19,7 +19,7 @@ module Pronto
       end
 
       let(:examiner) { double('examiner', smells: []) }
-      before { ::Reek::Examiner.stub(:new).and_return(examiner) }
+      before { ::Reek::Core::Examiner.stub(:new).and_return(examiner) }
 
       context 'patches with additions' do
         let(:patches) do
@@ -29,7 +29,7 @@ module Pronto
 
         it 'calls reek with the files that have additions' do
           subject
-          ::Reek::Examiner.should have_received(:new).with ['ruby_code.rb']
+          ::Reek::Core::Examiner.should have_received(:new).with ['ruby_code.rb']
         end
       end
 
@@ -43,7 +43,7 @@ module Pronto
 
         it 'calls reek with only the ruby files' do
           subject
-          ::Reek::Examiner.should have_received(:new).with ['ruby_code.rb']
+          ::Reek::Core::Examiner.should have_received(:new).with ['ruby_code.rb']
         end
       end
     end
