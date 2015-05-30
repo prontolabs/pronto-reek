@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'ostruct'
 
 module Pronto
   describe Reek do
@@ -18,32 +17,40 @@ module Pronto
         it { should == [] }
       end
 
-      let(:examiner) { double('examiner', smells: []) }
-      before { ::Reek::Core::Examiner.stub(:new).and_return(examiner) }
+      context 'patches with a two smells' do
+        include_context 'test repo'
 
-      context 'patches with additions' do
-        let(:patches) do
-          [double('with', additions: 4, new_file_full_path: 'ruby_code.rb'),
-           double('without', additions: 0)]
+        let(:patches) { repo.diff('c04b312') }
+
+        its(:count) { should == 2 }
+        its(:'first.msg') do
+          should ==
+            "Has the variable name '@n' (UncommunicativeVariableName)"
         end
 
-        it 'calls reek with the files that have additions' do
-          subject
-          ::Reek::Core::Examiner.should have_received(:new).with ['ruby_code.rb']
+        its(:'last.msg') do
+          should ==
+            "Has the parameter name 'n' (UncommunicativeParameterName)"
         end
       end
 
       context 'patches with additions to non-ruby files' do
+        let(:examiner) { double('examiner', smells: []) }
+        before { ::Reek::Core::Examiner.stub(:new).and_return(examiner) }
+
         let(:patches) do
           [double('ruby', additions: 4, new_file_full_path: 'ruby_code.rb'),
            double('non-ruby', additions: 4, new_file_full_path: 'other.stuff')]
         end
 
-        before { ::Pronto::Reek.any_instance.stub(:ruby_executable?).and_return(false) }
+        before do
+          ::Pronto::Reek.any_instance.stub(:ruby_executable?).and_return(false)
+        end
 
         it 'calls reek with only the ruby files' do
           subject
-          ::Reek::Core::Examiner.should have_received(:new).with ['ruby_code.rb']
+          ::Reek::Core::Examiner.should have_received(:new)
+            .with ['ruby_code.rb']
         end
       end
     end
