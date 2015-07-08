@@ -10,15 +10,13 @@ module Pronto
         .select { |patch| ruby_file?(patch.new_file_full_path) }
       files = patches_with_additions.map { |patch| patch.new_file_full_path.to_s }
 
-      if files.any?
-        smells = files.flat_map do |file|
-          ::Reek::Examiner.new(File.new(file)).smells
-        end
-        messages_for(patches_with_additions, smells).compact
-      else
-        []
+      smells = files.flat_map do |file|
+        ::Reek::Examiner.new(File.new(file)).smells
       end
+      messages_for(patches_with_additions, smells).compact
     end
+
+    private
 
     def messages_for(patches, errors)
       errors.map do |error|
