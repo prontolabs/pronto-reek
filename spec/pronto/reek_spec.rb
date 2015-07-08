@@ -36,11 +36,13 @@ module Pronto
 
       context 'patches with additions to non-ruby files' do
         let(:examiner) { double('examiner', smells: []) }
+        let(:ruby_file) { Pathname.new('ruby_code.rb') }
+        let(:other_file) { Pathname.new('other.stuff') }
         before { ::Reek::Examiner.stub(:new).and_return(examiner) }
 
         let(:patches) do
-          [double('ruby', additions: 4, new_file_full_path: 'ruby_code.rb'),
-           double('non-ruby', additions: 4, new_file_full_path: 'other.stuff')]
+          [double('ruby', additions: 4, new_file_full_path: ruby_file),
+           double('non-ruby', additions: 4, new_file_full_path: other_file)]
         end
 
         before do
@@ -49,7 +51,8 @@ module Pronto
 
         it 'calls reek with only the ruby files' do
           subject
-          ::Reek::Examiner.should have_received(:new).with('ruby_code.rb')
+          ::Reek::Examiner.should have_received(:new).with ruby_file
+          ::Reek::Examiner.should_not have_received(:new).with other_file
         end
       end
     end
