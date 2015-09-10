@@ -11,7 +11,7 @@ module Pronto
       files = patches_with_additions.map { |patch| patch.new_file_full_path.to_s }
 
       if files.any?
-        examiner = ::Reek::Core::Examiner.new(files)
+        examiner = ::Reek::Examiner.new(files)
         messages_for(patches_with_additions, examiner.smells).compact
       else
         []
