@@ -8,11 +8,13 @@ module Pronto
 
       patches_with_additions = patches.select { |patch| patch.additions > 0 }
         .select { |patch| ruby_file?(patch.new_file_full_path) }
-      files = patches_with_additions.map { |patch| patch.new_file_full_path.to_s }
+      files = patches_with_additions.map(&:new_file_full_path)
 
       if files.any?
-        examiner = ::Reek::Core::Examiner.new(files)
-        messages_for(patches_with_additions, examiner.smells).compact
+        files.flat_map do |file|
+          examiner = ::Reek::Examiner.new(file)
+          messages_for(patches_with_additions, examiner.smells).compact
+        end
       else
         []
       end
