@@ -33,7 +33,7 @@ Gem::Specification.new do |s|
   s.require_paths = ['lib']
 
   s.add_dependency('pronto', '~> 0.5.0')
-  s.add_dependency('reek', '~> 3.3.0')
+  s.add_dependency('reek', '~> 3.7.0')
   s.add_development_dependency('rake', '~> 10.4')
   s.add_development_dependency('rspec', '~> 3.3')
   s.add_development_dependency('rspec-its', '~> 1.2')
