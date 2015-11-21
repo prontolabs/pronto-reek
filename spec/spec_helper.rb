@@ -1,6 +1,7 @@
 require 'rspec'
 require 'rspec/its'
 require 'pronto/reek'
+require 'fileutils'
 
 RSpec.shared_context 'test repo' do
   let(:git) { 'spec/fixtures/test.git/git' }
