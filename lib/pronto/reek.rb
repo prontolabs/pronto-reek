@@ -3,24 +3,20 @@ require 'reek'
 
 module Pronto
   class Reek < Runner
-    def run(patches, _)
-      return [] unless patches
-
-      patches_with_additions = patches.select { |patch| patch.additions > 0 }
-        .select { |patch| ruby_file?(patch.new_file_full_path) }
-      files = patches_with_additions.map(&:new_file_full_path)
+    def run
+      files = ruby_patches.map(&:new_file_full_path)
 
       smells = files.flat_map do |file|
         ::Reek::Examiner.new(file).smells
       end
-      messages_for(patches_with_additions, smells).compact
+      messages_for(smells).compact
     end
 
     private
 
-    def messages_for(patches, errors)
+    def messages_for(errors)
       errors.map do |error|
-        patch = patch_for_error(patches, error)
+        patch = patch_for_error(error)
         next if patch.nil?
 
         line = patch.added_lines.find do |added_line|
@@ -32,12 +28,14 @@ module Pronto
     end
 
     def new_message(line, error)
-      Message.new(line.patch.delta.new_file[:path], line, :warning,
-                  "#{error.message.capitalize} (#{error.smell_type})")
+      path = line.patch.delta.new_file[:path]
+      message = "#{error.message.capitalize} (#{error.smell_type})"
+
+      Message.new(path, line, :warning, message, nil, self.class)
     end
 
-    def patch_for_error(patches, error)
-      patches.find do |patch|
+    def patch_for_error(error)
+      ruby_patches.find do |patch|
         patch.new_file_full_path.to_s == error.source
       end
     end
