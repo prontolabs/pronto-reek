@@ -23,14 +23,12 @@ module Pronto
           error.lines.find { |error_line| error_line == added_line.new_lineno }
         end
 
-        new_message(line, error) if line
+        new_message(line, ErrorMessage.new(error).message) if line
       end
     end
 
-    def new_message(line, error)
+    def new_message(line, message)
       path = line.patch.delta.new_file[:path]
-      message = "#{error.message.capitalize} (#{error.smell_type})"
-
       Message.new(path, line, :warning, message, nil, self.class)
     end
 
@@ -39,5 +37,37 @@ module Pronto
         patch.new_file_full_path.to_s == error.source
       end
     end
+
+    class ErrorMessage
+      def initialize(error)
+        @error = error
+      end
+
+      def message
+        "#{description} ([#{smell_type}](#{link}))"
+      end
+
+      private
+
+      attr_reader :error
+
+      def reek_formatter
+        @formatter ||= ::Reek::Report::WikiLinkWarningFormatter.new
+      end
+
+      def description
+        error.message.capitalize
+      end
+
+      def smell_type
+        error.smell_type
+      end
+
+      def link
+        reek_formatter.format_hash(error).fetch('wiki_link')
+      end
+    end
+
+    private_constant :ErrorMessage
   end
 end

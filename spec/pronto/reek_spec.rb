@@ -21,16 +21,22 @@ module Pronto
         include_context 'test repo'
 
         let(:patches) { repo.diff('c04b312') }
+        let(:uncommunicate_parameter_link) do
+          'https://github.com/troessner/reek/blob/master/docs/Uncommunicative-Parameter-Name.md'
+        end
+        let(:uncommunicate_variable_link) do
+          'https://github.com/troessner/reek/blob/master/docs/Uncommunicative-Variable-Name.md'
+        end
 
         its(:count) { should == 2 }
         its(:'first.msg') do
           should ==
-            "Has the parameter name 'n' (UncommunicativeParameterName)"
+            "Has the parameter name 'n' ([UncommunicativeParameterName](#{uncommunicate_parameter_link}))"
         end
 
         its(:'last.msg') do
           should ==
-            "Has the variable name '@n' (UncommunicativeVariableName)"
+            "Has the variable name '@n' ([UncommunicativeVariableName](#{uncommunicate_variable_link}))"
         end
       end
 
