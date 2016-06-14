@@ -31,7 +31,7 @@ module Pronto
       path = line.patch.delta.new_file[:path]
       message = "#{error.message.capitalize} (#{error.smell_type})"
 
-      Message.new(path, line, :warning, message, nil, self.class)
+      Message.new(path, line, :info, message, nil, self.class)
     end
 
     def patch_for_error(error)
