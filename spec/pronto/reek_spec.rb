@@ -51,7 +51,7 @@ module Pronto
 
         it 'calls reek with only the ruby files' do
           subject
-          ::Reek::Examiner.should have_received(:new).with ruby_file
+          ::Reek::Examiner.should have_received(:new).with(ruby_file, hash_including(:configuration))
           ::Reek::Examiner.should_not have_received(:new).with other_file
         end
       end
