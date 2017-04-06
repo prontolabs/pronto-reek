@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.author = 'Mindaugas Mozūras'
   s.email = 'mindaugas.mozuras@gmail.com'
-  s.homepage = 'http://github.org/mmozuras/pronto-reek'
+  s.homepage = 'http://github.com/mmozuras/pronto-reek'
   s.summary = 'Pronto runner for Reek, code smell detector for Ruby'
 
   s.licenses = ['MIT']
