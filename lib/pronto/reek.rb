@@ -5,7 +5,7 @@ module Pronto
   class Reek < Runner
     def run
       files = ruby_patches.map(&:new_file_full_path)
-      configuration = ::Reek::Configuration::AppConfiguration.from_path
+      configuration = ::Reek::Configuration::AppConfiguration.from_path(nil)
 
       smells = files.flat_map do |file|
         ::Reek::Examiner.new(file, configuration: configuration).smells
