@@ -4,7 +4,10 @@ require 'reek'
 module Pronto
   class Reek < Runner
     def run
-      files = ruby_patches.map(&:new_file_full_path)
+      files = ruby_patches.map do |patch|
+        patch.new_file_full_path.relative_path_from(Pathname.pwd)
+      end
+
       configuration = ::Reek::Configuration::AppConfiguration.from_path(nil)
 
       smells = files.flat_map do |file|
@@ -37,7 +40,7 @@ module Pronto
 
     def patch_for_error(error)
       ruby_patches.find do |patch|
-        patch.new_file_full_path.to_s == error.source
+        patch.new_file_full_path.relative_path_from(Pathname.pwd).to_s == error.source
       end
     end
   end
