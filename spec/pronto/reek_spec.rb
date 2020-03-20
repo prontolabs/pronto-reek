@@ -25,12 +25,12 @@ module Pronto
         its(:count) { should == 2 }
         its(:'first.msg') do
           should ==
-            "Has the parameter name 'n' (UncommunicativeParameterName)"
+            "Has the parameter name 'n' - [UncommunicativeParameterName](https://github.com/troessner/reek/blob/v5.6.0/docs/Uncommunicative-Parameter-Name.md)"
         end
 
         its(:'last.msg') do
           should ==
-            "Has the variable name '@n' (UncommunicativeVariableName)"
+            "Has the variable name '@n' - [UncommunicativeVariableName](https://github.com/troessner/reek/blob/v5.6.0/docs/Uncommunicative-Variable-Name.md)"
         end
       end
 
