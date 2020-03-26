@@ -33,7 +33,7 @@ module Pronto
 
     def new_message(line, error)
       path = line.patch.delta.new_file[:path]
-      message = "#{error.message.capitalize} (#{error.smell_type})"
+      message = "#{error.message.capitalize} - [#{error.smell_type}](#{error.explanatory_link})"
 
       Message.new(path, line, :info, message, nil, self.class)
     end
