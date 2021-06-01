@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 module Pronto
@@ -31,6 +33,18 @@ module Pronto
         its(:'last.msg') do
           should \
             match(/Has the variable name '@n' - \[UncommunicativeVariableName\]\(https:\/\/github.com\/troessner\/reek\/blob\/v\d+\.\d+\.\d+\/docs\/Uncommunicative-Variable-Name.md\)/)
+        end
+
+        context 'when severity level configured on environment variable' do
+          before { stub_const('ENV', 'PRONTO_REEK_SEVERITY_LEVEL' => 'fatal') }
+
+          its(:'first.level') { should == :fatal }
+        end
+
+        context 'when severity level configured on file' do
+          before { Pronto::ConfigFile.stub(:new).and_return('reek' => { 'severity_level' => 'error' }) }
+
+          its(:'first.level') { should == :error }
         end
       end
 

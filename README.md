@@ -10,3 +10,12 @@ Pronto runner for [Reek](https://github.com/troessner/reek), code smell detector
 ## Configuration
 
 Configuring Reek via [config.reek](https://github.com/troessner/reek#configuration-file), or any file ending with .reek, will work just fine with pronto-reek.
+
+You can also specify a custom severity level for the reek smells with the environment variable PRONTO_REEK_SEVERITY_LEVEL.
+
+Or if you prefer provide it on your `.pronto.yml` (environment variable has precedence over file):
+
+```yaml
+reek:
+  severity_level: warning # default is info
+```
